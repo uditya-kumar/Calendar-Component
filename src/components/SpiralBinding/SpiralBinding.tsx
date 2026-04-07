@@ -26,13 +26,19 @@ export const SpiralBinding = memo(function SpiralBinding({
         <div className={styles.coilsContainer}>
           <div className={styles.coilsLeft}>
             {Array.from({ length: halfCount }).map((_, index) => (
-              <div key={`left-${index}`} className={styles.coil} />
+              <div key={`left-${index}`} className={styles.coilPair}>
+                <span className={styles.coilWire} />
+                <span className={styles.coilWire} />
+              </div>
             ))}
           </div>
           <div className={styles.hookGap} />
           <div className={styles.coilsRight}>
             {Array.from({ length: halfCount }).map((_, index) => (
-              <div key={`right-${index}`} className={styles.coil} />
+              <div key={`right-${index}`} className={styles.coilPair}>
+                <span className={styles.coilWire} />
+                <span className={styles.coilWire} />
+              </div>
             ))}
           </div>
         </div>
