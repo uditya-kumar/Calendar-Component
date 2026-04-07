@@ -170,7 +170,13 @@
 @media (max-width: 768px) {
   .trigger {
     padding: var(--gap-sm) var(--gap-md);
-    font-size: var(--font-size-lg);
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .chevron {
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -183,7 +189,7 @@
 
   .trigger {
     padding: var(--gap-xs) var(--gap-sm);
-    font-size: var(--font-size-base);
+    font-size: 1.05rem;
   }
 
   .monthButton {
