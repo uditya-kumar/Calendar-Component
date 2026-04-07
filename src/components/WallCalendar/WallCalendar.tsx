@@ -89,13 +89,6 @@ export const WallCalendar = memo(function WallCalendar({
     ? notes.find(n => n.date === selectedDateKey) || null
     : null;
 
-  // Count notes for current month
-  const monthNotesCount = notes.filter(n => {
-    if (n.date === 'general') return false;
-    const noteDate = new Date(n.date);
-    return noteDate.getFullYear() === currentMonth.getFullYear() &&
-           noteDate.getMonth() === currentMonth.getMonth();
-  }).length;
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -165,7 +158,6 @@ export const WallCalendar = memo(function WallCalendar({
             onHoverDate={hoverDate}
             onClearSelection={clearSelection}
             onOpenAllNotes={isMobile ? handleOpenAllNotes : undefined}
-            notesCount={monthNotesCount}
           />
 
           {/* Selection Info */}

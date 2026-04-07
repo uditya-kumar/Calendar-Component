@@ -1,4 +1,5 @@
-import { memo, useState, useEffect, useRef, useCallback, CSSProperties } from 'react';
+import { memo, useState, useEffect, useRef, useCallback } from 'react';
+import type { CSSProperties } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import type { Note } from '../../types/calendar.types';

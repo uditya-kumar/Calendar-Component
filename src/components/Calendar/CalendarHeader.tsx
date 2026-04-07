@@ -11,7 +11,6 @@ interface CalendarHeaderProps {
   onClearSelection: () => void;
   hasSelection: boolean;
   onOpenAllNotes?: () => void;
-  notesCount?: number;
 }
 
 export const CalendarHeader = memo(function CalendarHeader({
@@ -21,7 +20,6 @@ export const CalendarHeader = memo(function CalendarHeader({
   onClearSelection,
   hasSelection,
   onOpenAllNotes,
-  notesCount = 0,
 }: CalendarHeaderProps) {
   return (
     <div className={styles.header}>
