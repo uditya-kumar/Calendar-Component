@@ -10,6 +10,7 @@ import { AllNotesModal } from '../AllNotesModal';
 import { useCalendarState } from '../../hooks/useCalendarState';
 import { useNotes } from '../../hooks/useNotes';
 import { getNoteDateKeys } from '../../utils/noteUtils';
+import { applyMonthTheme } from '../../utils/themes';
 import styles from './WallCalendar.module.css';
 
 interface WallCalendarProps {
@@ -52,6 +53,11 @@ export const WallCalendar = memo(function WallCalendar({
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Apply theme based on current month
+  useEffect(() => {
+    applyMonthTheme(currentMonth.getMonth());
+  }, [currentMonth]);
 
   const handleNavigate = useCallback((dir: 'prev' | 'next') => {
     navigateMonth(dir);
