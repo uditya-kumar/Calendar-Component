@@ -166,6 +166,22 @@
   color: white;
 }
 
+/* Mobile backdrop */
+.backdrop {
+  display: none;
+}
+
+/* Mobile modal styles */
+.mobileModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  min-width: 300px;
+  max-width: 90vw;
+  z-index: 1001;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .trigger {
@@ -177,6 +193,46 @@
   .chevron {
     width: 18px;
     height: 18px;
+  }
+
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .mobileModal .yearSelector {
+    padding: var(--gap-lg);
+  }
+
+  .mobileModal .yearNav {
+    width: 36px;
+    height: 36px;
+  }
+
+  .mobileModal .yearButton {
+    font-size: var(--font-size-lg);
+  }
+
+  .mobileModal .monthGrid {
+    padding: var(--gap-lg);
+    gap: var(--gap-sm);
+  }
+
+  .mobileModal .monthButton {
+    padding: var(--gap-md);
+    font-size: var(--font-size-base);
+  }
+
+  .mobileModal .quickActions {
+    padding: var(--gap-md) var(--gap-lg);
+  }
+
+  .mobileModal .todayButton {
+    padding: var(--gap-md);
+    font-size: var(--font-size-base);
   }
 }
 

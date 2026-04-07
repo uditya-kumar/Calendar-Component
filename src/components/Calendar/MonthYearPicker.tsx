@@ -16,7 +16,16 @@ export const MonthYearPicker = memo(function MonthYearPicker({
   const [view, setView] = useState<'months' | 'years'>('months');
   const [selectedYear, setSelectedYear] = useState(currentMonth.getFullYear());
   const [yearRangeStart, setYearRangeStart] = useState(Math.floor(currentMonth.getFullYear() / 12) * 12);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Track mobile state
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Generate 12 years for the grid
   const yearsInRange = Array.from({ length: 12 }, (_, i) => yearRangeStart + i);
@@ -85,12 +94,24 @@ export const MonthYearPicker = memo(function MonthYearPicker({
       </button>
 
       <AnimatePresence>
+        {isOpen && isMobile && (
+          <motion.div
+            className={styles.backdrop}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => {
+              setIsOpen(false);
+              setView('months');
+            }}
+          />
+        )}
         {isOpen && (
           <motion.div
-            className={styles.dropdown}
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            className={`${styles.dropdown} ${isMobile ? styles.mobileModal : ''}`}
+            initial={isMobile ? { opacity: 0, scale: 0.9 } : { opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            exit={isMobile ? { opacity: 0, scale: 0.9 } : { opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.15 }}
             role="dialog"
             aria-label="Select month and year"

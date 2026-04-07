@@ -52,11 +52,13 @@ export const BottomSheet = memo(function BottomSheet({
   const [endTime, setEndTime] = useState('09:30');
   const [activeDropdown, setActiveDropdown] = useState<'start' | 'end' | null>(null);
   const [keyboardOffset, setKeyboardOffset] = useState(0);
+  const [isClosing, setIsClosing] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Reset form when opening with new date/note
   useEffect(() => {
     if (isOpen && selectedDate) {
+      setIsClosing(false);
       if (note) {
         setContent(note.content);
         setStartTime(note.startTime || '09:00');
@@ -109,8 +111,10 @@ export const BottomSheet = memo(function BottomSheet({
 
   const handleSave = useCallback(() => {
     if (selectedDate && content.trim()) {
+      setIsClosing(true);
       onSave(selectedDate, content, startTime, endTime);
-      onClose();
+      // Close immediately
+      requestAnimationFrame(() => onClose());
     }
   }, [selectedDate, content, startTime, endTime, onSave, onClose]);
 
@@ -140,6 +144,7 @@ export const BottomSheet = memo(function BottomSheet({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={isClosing ? { duration: 0.1 } : undefined}
             onClick={onClose}
           />
 
@@ -149,8 +154,11 @@ export const BottomSheet = memo(function BottomSheet({
             style={{ bottom: keyboardOffset } as CSSProperties}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            exit={{ y: '100%', opacity: 0 }}
+            transition={isClosing
+              ? { duration: 0.1 }
+              : { type: 'spring', damping: 25, stiffness: 300 }
+            }
           >
             {/* Handle */}
             <div className={styles.handle} />
