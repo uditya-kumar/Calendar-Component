@@ -5,11 +5,11 @@
   flex-direction: column;
 }
 
-/* Wall/background area behind the binding */
+/* Top spacer area for the binding */
 .wallArea {
   position: relative;
-  height: 44px;
-  background: linear-gradient(to bottom, #e0e0e0 0%, #d0d0d0 100%);
+  height: 36px;
+  background: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,7 +20,7 @@
 /* The main horizontal wire */
 .mainWire {
   position: absolute;
-  top: 16px;
+  top: 18px;
   left: 30px;
   right: 30px;
   display: flex;
@@ -58,7 +58,7 @@
 /* Container for all coils */
 .coilsContainer {
   position: absolute;
-  bottom: 6px;
+  bottom: 1px;
   left: 0;
   right: 0;
   display: flex;
@@ -148,11 +148,11 @@
 /* Responsive */
 @media (max-width: 768px) {
   .wallArea {
-    height: 38px;
+    height: 32px;
   }
 
   .mainWire {
-    top: 14px;
+    top: 16px;
     left: 20px;
     right: 20px;
     height: 16px;
@@ -169,7 +169,7 @@
   }
 
   .coilsContainer {
-    bottom: 5px;
+    bottom: 1px;
     padding: 0 20px;
   }
 
@@ -210,11 +210,11 @@
 
 @media (max-width: 480px) {
   .wallArea {
-    height: 32px;
+    height: 28px;
   }
 
   .mainWire {
-    top: 10px;
+    top: 13px;
     left: 15px;
     right: 15px;
     height: 14px;
@@ -237,7 +237,7 @@
   }
 
   .coilsContainer {
-    bottom: 4px;
+    bottom: 0;
     padding: 0 15px;
   }
 
@@ -280,7 +280,7 @@
 /* Print styles */
 @media print {
   .wallArea {
-    background: #e0e0e0 !important;
+    background: transparent !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
