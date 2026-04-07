@@ -1,0 +1,196 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 16px 16px 0 0;
+  z-index: 101;
+  min-height: 50vh;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.handle {
+  width: 36px;
+  height: 4px;
+  background: var(--border-medium);
+  border-radius: 2px;
+  margin: 8px auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--gap-md) var(--gap-lg);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.closeButton {
+  padding: var(--gap-sm) var(--gap-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border-radius: var(--radius-md);
+  transition: opacity var(--transition-fast);
+}
+
+.saveButton {
+  padding: 10px 20px;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: white;
+  background: var(--accent-blue);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.saveButton:hover {
+  background: var(--accent-blue-dark);
+}
+
+.saveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.content {
+  flex: 1;
+  padding: var(--gap-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+.titleInput {
+  width: 100%;
+  padding: var(--gap-md);
+  font-family: inherit;
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  color: var(--text-primary);
+  background: var(--calendar-paper);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.titleInput:focus {
+  border-color: var(--accent-blue);
+}
+
+.titleInput::placeholder {
+  color: var(--text-muted);
+}
+
+.timeRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+}
+
+.timeIcon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.timePickerWrapper {
+  position: relative;
+}
+
+.timeButton {
+  padding: var(--gap-sm) var(--gap-md);
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  background: var(--calendar-paper);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.timeButton:hover {
+  border-color: var(--accent-blue);
+}
+
+.timeDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  width: 120px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.timeOption {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.timeOption:hover {
+  background: var(--hover-bg);
+}
+
+.timeOption.selected {
+  background: var(--accent-blue);
+  color: white;
+}
+
+.timeArrow {
+  color: var(--text-muted);
+  font-size: var(--font-size-base);
+}
+
+.deleteButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  padding: var(--gap-md);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.deleteButton:hover {
+  background: #fee2e2;
+}

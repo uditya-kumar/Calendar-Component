@@ -10,6 +10,8 @@ interface CalendarHeaderProps {
   onMonthSelect: (date: Date) => void;
   onClearSelection: () => void;
   hasSelection: boolean;
+  onOpenAllNotes?: () => void;
+  notesCount?: number;
 }
 
 export const CalendarHeader = memo(function CalendarHeader({
@@ -18,6 +20,8 @@ export const CalendarHeader = memo(function CalendarHeader({
   onMonthSelect,
   onClearSelection,
   hasSelection,
+  onOpenAllNotes,
+  notesCount = 0,
 }: CalendarHeaderProps) {
   return (
     <div className={styles.header}>
@@ -68,6 +72,19 @@ export const CalendarHeader = memo(function CalendarHeader({
             <path d="M8 5l5 5-5 5" />
           </svg>
         </motion.button>
+
+        {/* Mobile: All Notes button */}
+        {onOpenAllNotes && (
+          <button
+            className={styles.allNotesBtn}
+            onClick={onOpenAllNotes}
+          >
+            All Notes
+            {notesCount > 0 && (
+              <span className={styles.notesBadge}>{notesCount}</span>
+            )}
+          </button>
+        )}
 
         {hasSelection && (
           <motion.button

@@ -1,9 +1,12 @@
 import { memo, useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { format } from 'date-fns';
 import { SpiralBinding } from '../SpiralBinding';
 import { HeroSection } from '../HeroSection';
 import { Calendar } from '../Calendar';
 import { NotesPanel } from '../NotesPanel';
+import { BottomSheet } from '../BottomSheet';
+import { AllNotesModal } from '../AllNotesModal';
 import { useCalendarState } from '../../hooks/useCalendarState';
 import { useNotes } from '../../hooks/useNotes';
 import styles from './WallCalendar.module.css';
@@ -34,16 +37,14 @@ export const WallCalendar = memo(function WallCalendar({
     deleteNote,
   } = useNotes();
 
-  const [isNotesCollapsed, setIsNotesCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [isAllNotesOpen, setIsAllNotesOpen] = useState(false);
 
   // Track window size for responsive behavior
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
-        setIsNotesCollapsed(false);
-      }
     };
 
     checkMobile();
@@ -57,11 +58,44 @@ export const WallCalendar = memo(function WallCalendar({
 
   const handleSelectDate = useCallback((date: Date, ctrlKey?: boolean) => {
     selectDate(date, ctrlKey);
+    // On mobile, open bottom sheet when date is selected
+    if (isMobile && !ctrlKey) {
+      setIsBottomSheetOpen(true);
+    }
+  }, [selectDate, isMobile]);
+
+  const handleCloseBottomSheet = useCallback(() => {
+    setIsBottomSheetOpen(false);
+  }, []);
+
+  const handleOpenAllNotes = useCallback(() => {
+    setIsAllNotesOpen(true);
+  }, []);
+
+  const handleCloseAllNotes = useCallback(() => {
+    setIsAllNotesOpen(false);
+  }, []);
+
+  const handleSelectNoteDate = useCallback((date: Date) => {
+    selectDate(date);
+    setIsBottomSheetOpen(true);
   }, [selectDate]);
 
-  const toggleNotes = useCallback(() => {
-    setIsNotesCollapsed(prev => !prev);
-  }, []);
+  // Get current note for selected date
+  const selectedDateKey = selectedRange.start
+    ? format(selectedRange.start, 'yyyy-MM-dd')
+    : null;
+  const currentNote = selectedDateKey
+    ? notes.find(n => n.date === selectedDateKey) || null
+    : null;
+
+  // Count notes for current month
+  const monthNotesCount = notes.filter(n => {
+    if (n.date === 'general') return false;
+    const noteDate = new Date(n.date);
+    return noteDate.getFullYear() === currentMonth.getFullYear() &&
+           noteDate.getMonth() === currentMonth.getMonth();
+  }).length;
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -69,11 +103,14 @@ export const WallCalendar = memo(function WallCalendar({
       // Escape to clear selection
       if (e.key === 'Escape') {
         clearSelection();
+        setIsBottomSheetOpen(false);
+        setIsAllNotesOpen(false);
         return;
       }
 
       // Arrow keys for month navigation (when not focused on input)
-      if (document.activeElement?.tagName !== 'TEXTAREA') {
+      if (document.activeElement?.tagName !== 'TEXTAREA' &&
+          document.activeElement?.tagName !== 'INPUT') {
         if (e.key === 'ArrowLeft' && e.altKey) {
           e.preventDefault();
           handleNavigate('prev');
@@ -103,17 +140,17 @@ export const WallCalendar = memo(function WallCalendar({
 
       {/* Main Content: Notes + Calendar */}
       <div className={styles.content}>
-        {/* Notes Panel (left side on desktop, bottom on mobile) */}
-        <NotesPanel
-          currentMonth={currentMonth}
-          selectedRange={selectedRange}
-          notes={notes}
-          onSaveNote={saveNote}
-          onDeleteNote={deleteNote}
-          onSelectDate={selectDate}
-          isCollapsed={isMobile && isNotesCollapsed}
-          onToggleCollapse={isMobile ? toggleNotes : undefined}
-        />
+        {/* Notes Panel (desktop only) */}
+        {!isMobile && (
+          <NotesPanel
+            currentMonth={currentMonth}
+            selectedRange={selectedRange}
+            notes={notes}
+            onSaveNote={saveNote}
+            onDeleteNote={deleteNote}
+            onSelectDate={selectDate}
+          />
+        )}
 
         {/* Calendar Section */}
         <div className={styles.calendarSection}>
@@ -127,6 +164,8 @@ export const WallCalendar = memo(function WallCalendar({
             onSelectDate={handleSelectDate}
             onHoverDate={hoverDate}
             onClearSelection={clearSelection}
+            onOpenAllNotes={isMobile ? handleOpenAllNotes : undefined}
+            notesCount={monthNotesCount}
           />
 
           {/* Selection Info */}
@@ -152,12 +191,38 @@ export const WallCalendar = memo(function WallCalendar({
         </div>
       </div>
 
-      {/* Keyboard shortcuts hint */}
-      <div className={styles.shortcuts} aria-hidden="true">
-        <span>Alt + ← / → navigate</span>
-        <span>Ctrl + click for range</span>
-        <span>Esc to clear</span>
-      </div>
+      {/* Keyboard shortcuts hint (desktop only) */}
+      {!isMobile && (
+        <div className={styles.shortcuts} aria-hidden="true">
+          <span>Alt + ← / → navigate</span>
+          <span>Ctrl + click for range</span>
+          <span>Esc to clear</span>
+        </div>
+      )}
+
+      {/* Mobile: Bottom Sheet for adding/editing notes */}
+      {isMobile && (
+        <BottomSheet
+          isOpen={isBottomSheetOpen}
+          selectedDate={selectedRange.start}
+          note={currentNote}
+          onClose={handleCloseBottomSheet}
+          onSave={saveNote}
+          onDelete={deleteNote}
+        />
+      )}
+
+      {/* Mobile: All Notes Modal */}
+      {isMobile && (
+        <AllNotesModal
+          isOpen={isAllNotesOpen}
+          currentMonth={currentMonth}
+          notes={notes}
+          onClose={handleCloseAllNotes}
+          onSelectNote={handleSelectNoteDate}
+          onDeleteNote={deleteNote}
+        />
+      )}
     </motion.div>
   );
 });

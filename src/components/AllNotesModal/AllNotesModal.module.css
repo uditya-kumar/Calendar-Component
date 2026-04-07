@@ -1,0 +1,188 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  height: 340px;
+  background: white;
+  border-radius: var(--radius-lg);
+  z-index: 101;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--gap-md) var(--gap-lg);
+  border-bottom: 1px solid var(--border-light);
+  background: white;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.closeButton {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.closeButton:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.notesList {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--gap-md);
+  padding-right: var(--gap-sm);
+}
+
+/* Slim scrollbar */
+.notesList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.notesList::-webkit-scrollbar-track {
+  background: var(--border-light);
+  border-radius: 2px;
+}
+
+.notesList::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 2px;
+}
+
+.notesList::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gap-2xl);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.emptyState svg {
+  opacity: 0.4;
+  margin-bottom: var(--gap-md);
+}
+
+.emptyText {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+
+.emptyHint {
+  font-size: var(--font-size-sm);
+  opacity: 0.7;
+  margin: 0;
+}
+
+/* Note Card - Boxed style (same as desktop) */
+.noteCard {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  padding: var(--gap-md);
+  margin-bottom: var(--gap-sm);
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.noteCard:last-child {
+  margin-bottom: 0;
+}
+
+.noteCard:hover {
+  border-color: var(--text-muted);
+}
+
+.noteContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.noteTitle {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.noteMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  flex-wrap: wrap;
+}
+
+.noteDate {
+  font-size: var(--font-size-xs);
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.noteTime {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.deleteButton {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.deleteButton:hover {
+  color: #dc2626;
+}

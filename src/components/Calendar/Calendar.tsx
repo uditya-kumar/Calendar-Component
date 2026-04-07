@@ -17,6 +17,8 @@ interface CalendarProps {
   onSelectDate: (date: Date, ctrlKey?: boolean) => void;
   onHoverDate: (date: Date | null) => void;
   onClearSelection: () => void;
+  onOpenAllNotes?: () => void;
+  notesCount?: number;
 }
 
 export const Calendar = memo(function Calendar({
@@ -29,6 +31,8 @@ export const Calendar = memo(function Calendar({
   onSelectDate,
   onHoverDate,
   onClearSelection,
+  onOpenAllNotes,
+  notesCount,
 }: CalendarProps) {
   // Track navigation direction for animation
   const [direction, setDirection] = useState(0);
@@ -61,6 +65,8 @@ export const Calendar = memo(function Calendar({
         onMonthSelect={handleMonthSelect}
         onClearSelection={onClearSelection}
         hasSelection={hasSelection}
+        onOpenAllNotes={onOpenAllNotes}
+        notesCount={notesCount}
       />
 
       <CalendarGrid
