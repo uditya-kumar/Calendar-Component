@@ -17,21 +17,25 @@ interface CalendarGridProps {
   direction: number;
 }
 
+// Page flip animation - calendar page turns like a real wall calendar
 const gridVariants = {
   enter: (direction: number) => ({
-    x: direction > 0 ? 100 : -100,
+    rotateX: direction > 0 ? 45 : -45,
+    y: direction > 0 ? -30 : 30,
     opacity: 0,
-    rotateY: direction > 0 ? -8 : 8,
+    filter: 'brightness(0.8)',
   }),
   center: {
-    x: 0,
+    rotateX: 0,
+    y: 0,
     opacity: 1,
-    rotateY: 0,
+    filter: 'brightness(1)',
   },
   exit: (direction: number) => ({
-    x: direction < 0 ? 100 : -100,
+    rotateX: direction > 0 ? -45 : 45,
+    y: direction > 0 ? 30 : -30,
     opacity: 0,
-    rotateY: direction < 0 ? -8 : 8,
+    filter: 'brightness(0.8)',
   }),
 };
 
@@ -77,10 +81,9 @@ export const CalendarGrid = memo(function CalendarGrid({
           animate="center"
           exit="exit"
           transition={{
-            duration: 0.3,
+            duration: 0.25,
             ease: [0.4, 0, 0.2, 1],
           }}
-          style={{ perspective: 1000 }}
         >
           {weeks.map((week, weekIndex) => (
             <div key={weekIndex} role="row" className={styles.gridRow}>
