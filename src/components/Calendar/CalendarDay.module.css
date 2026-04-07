@@ -10,8 +10,8 @@
   color: var(--text-primary);
   background: transparent;
   border: none;
+  border-radius: 50%;
   cursor: pointer;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
   user-select: none;
 }
 
@@ -62,7 +62,6 @@
 /* Hover state */
 .day:not(.outsideMonth):hover {
   background: var(--hover-bg);
-  border-radius: var(--radius-sm);
 }
 
 .hovered:not(.outsideMonth) {

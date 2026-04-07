@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import { motion } from 'framer-motion';
 import type { CalendarDate } from '../../types/calendar.types';
 import type { Holiday } from '../../utils/holidays';
 import styles from './CalendarDay.module.css';
@@ -61,7 +60,7 @@ export const CalendarDay = memo(function CalendarDay({
   };
 
   return (
-    <motion.button
+    <button
       className={classNames}
       onClick={handleClick}
       onMouseEnter={() => isCurrentMonth && onHover(date)}
@@ -72,9 +71,6 @@ export const CalendarDay = memo(function CalendarDay({
       aria-label={`${dayOfMonth}${isToday ? ', today' : ''}${hasNote ? ', has note' : ''}${holiday ? `, ${holiday.name}` : ''}`}
       aria-selected={isRangeStart || isRangeEnd}
       title={holiday?.name}
-      whileHover={isCurrentMonth ? { scale: 1.05 } : undefined}
-      whileTap={isCurrentMonth ? { scale: 0.95 } : undefined}
-      transition={{ duration: 0.1 }}
     >
       <span className={styles.dayNumber}>{dayOfMonth}</span>
       {/* Note dot takes precedence over holiday dot */}
@@ -84,6 +80,6 @@ export const CalendarDay = memo(function CalendarDay({
         <span className={styles.holidayIndicator} aria-hidden="true" />
       ) : null}
       {isToday && <span className={styles.todayRing} aria-hidden="true" />}
-    </motion.button>
+    </button>
   );
 });
