@@ -17,7 +17,9 @@ export const MonthYearPicker = memo(function MonthYearPicker({
   const [selectedYear, setSelectedYear] = useState(currentMonth.getFullYear());
   const [yearRangeStart, setYearRangeStart] = useState(Math.floor(currentMonth.getFullYear() / 12) * 12);
   const [isMobile, setIsMobile] = useState(false);
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   // Track mobile state
   useEffect(() => {
@@ -64,6 +66,13 @@ export const MonthYearPicker = memo(function MonthYearPicker({
   };
 
   const handleToggle = () => {
+    if (!isOpen && triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setDropdownPos({
+        top: rect.bottom + 8,
+        left: rect.left + rect.width / 2,
+      });
+    }
     setIsOpen(prev => !prev);
     setSelectedYear(currentMonth.getFullYear());
     setView('months');
@@ -72,6 +81,7 @@ export const MonthYearPicker = memo(function MonthYearPicker({
   return (
     <div className={styles.container} ref={containerRef}>
       <button
+        ref={triggerRef}
         className={styles.trigger}
         onClick={handleToggle}
         aria-expanded={isOpen}
@@ -109,6 +119,7 @@ export const MonthYearPicker = memo(function MonthYearPicker({
         {isOpen && (
           <motion.div
             className={`${styles.dropdown} ${isMobile ? styles.mobileModal : ''}`}
+            style={!isMobile ? { top: dropdownPos.top, left: dropdownPos.left } : undefined}
             initial={isMobile ? { opacity: 0, scale: 0.9 } : { opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={isMobile ? { opacity: 0, scale: 0.9 } : { opacity: 0, y: -10, scale: 0.95 }}
