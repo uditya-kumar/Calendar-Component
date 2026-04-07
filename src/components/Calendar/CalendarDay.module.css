@@ -145,6 +145,7 @@
     width: 100%;
     aspect-ratio: 1;
     height: auto;
+    font-size: var(--font-size-base);
   }
 }
 

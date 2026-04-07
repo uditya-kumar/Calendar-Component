@@ -80,9 +80,6 @@ export const CalendarHeader = memo(function CalendarHeader({
             onClick={onOpenAllNotes}
           >
             All Notes
-            {notesCount > 0 && (
-              <span className={styles.notesBadge}>{notesCount}</span>
-            )}
           </button>
         )}
 

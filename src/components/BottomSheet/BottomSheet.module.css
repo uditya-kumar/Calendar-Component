@@ -13,7 +13,7 @@
   background: white;
   border-radius: 16px 16px 0 0;
   z-index: 101;
-  min-height: 50vh;
+  min-height: auto;
   max-height: 90vh;
   overflow: hidden;
   display: flex;
@@ -78,6 +78,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--gap-lg);
+  overflow-y: auto;
 }
 
 .titleInput {

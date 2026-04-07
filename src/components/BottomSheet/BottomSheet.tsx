@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useRef, useCallback } from 'react';
+import { memo, useState, useEffect, useRef, useCallback, CSSProperties } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import type { Note } from '../../types/calendar.types';
@@ -50,6 +50,7 @@ export const BottomSheet = memo(function BottomSheet({
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('09:30');
   const [activeDropdown, setActiveDropdown] = useState<'start' | 'end' | null>(null);
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Reset form when opening with new date/note
@@ -66,6 +67,31 @@ export const BottomSheet = memo(function BottomSheet({
       }
     }
   }, [isOpen, selectedDate, note]);
+
+  // Handle keyboard visibility - keep input above keyboard
+  useEffect(() => {
+    if (!isOpen) {
+      setKeyboardOffset(0);
+      return;
+    }
+
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const handleResize = () => {
+      // Calculate keyboard height from viewport difference
+      const keyboardHeight = window.innerHeight - viewport.height;
+      setKeyboardOffset(keyboardHeight > 0 ? keyboardHeight : 0);
+    };
+
+    viewport.addEventListener('resize', handleResize);
+    viewport.addEventListener('scroll', handleResize);
+
+    return () => {
+      viewport.removeEventListener('resize', handleResize);
+      viewport.removeEventListener('scroll', handleResize);
+    };
+  }, [isOpen]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -119,6 +145,7 @@ export const BottomSheet = memo(function BottomSheet({
           {/* Bottom Sheet */}
           <motion.div
             className={styles.sheet}
+            style={{ bottom: keyboardOffset } as CSSProperties}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}

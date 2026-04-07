@@ -158,19 +158,31 @@
     grid-template-columns: repeat(7, 1fr);
   }
 
+  .weekDay {
+    font-size: var(--font-size-xs);
+    height: 32px;
+  }
+
   .grid {
     grid-template-columns: repeat(7, 1fr);
   }
 
   .allNotesBtn {
     display: flex;
+    padding: 8px 14px;
+    font-size: var(--font-size-base);
+  }
+
+  .navButton {
+    width: 36px;
+    height: 36px;
   }
 }
 
 @media (max-width: 480px) {
   .weekDay {
-    font-size: 10px;
-    height: 24px;
+    font-size: 11px;
+    height: 28px;
   }
 
   .holidayBanner {

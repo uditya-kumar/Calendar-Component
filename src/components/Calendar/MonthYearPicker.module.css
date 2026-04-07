@@ -167,6 +167,13 @@
 }
 
 /* Responsive */
+@media (max-width: 768px) {
+  .trigger {
+    padding: var(--gap-sm) var(--gap-md);
+    font-size: var(--font-size-lg);
+  }
+}
+
 @media (max-width: 480px) {
   .dropdown {
     min-width: 220px;
@@ -176,7 +183,7 @@
 
   .trigger {
     padding: var(--gap-xs) var(--gap-sm);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
   }
 
   .monthButton {

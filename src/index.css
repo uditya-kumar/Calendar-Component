@@ -95,17 +95,25 @@
 
 @media (max-width: 768px) {
   :root {
-    --cell-size: 40px;
+    --cell-size: 44px;
     --calendar-width: 100%;
     --notes-width: 100%;
-    --hero-height: 200px;
+    --hero-height: 220px;
+  }
+
+  #root {
+    padding: var(--gap-md);
   }
 }
 
 @media (max-width: 480px) {
   :root {
-    --cell-size: 36px;
-    --hero-height: 180px;
+    --cell-size: 40px;
+    --hero-height: 200px;
+  }
+
+  #root {
+    padding: var(--gap-sm);
   }
 }
 

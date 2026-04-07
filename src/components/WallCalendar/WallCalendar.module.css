@@ -89,6 +89,7 @@
 @media (max-width: 768px) {
   .wallCalendar {
     width: 100%;
+    min-width: 100%;
     border-radius: var(--radius-md);
   }
 
