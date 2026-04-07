@@ -8,6 +8,7 @@ import { NotesPanel } from '../NotesPanel';
 import { BottomSheet } from '../BottomSheet';
 import { AllNotesModal } from '../AllNotesModal';
 import { ThemeToggle } from '../ThemeToggle';
+import { HangingWire } from '../HangingWire';
 import { useCalendarState } from '../../hooks/useCalendarState';
 import { useNotes } from '../../hooks/useNotes';
 import { useSwipe } from '../../hooks/useSwipe';
@@ -147,6 +148,9 @@ export const WallCalendar = memo(function WallCalendar({
     >
       {/* Theme Toggle */}
       <ThemeToggle theme={theme} onToggle={toggleTheme} />
+
+      {/* Hanging Wire */}
+      <HangingWire />
 
       {/* Hero Section with Spiral Binding overlay */}
       <div className={styles.heroWrapper}>

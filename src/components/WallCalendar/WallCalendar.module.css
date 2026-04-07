@@ -3,10 +3,11 @@
   flex-direction: column;
   width: fit-content;
   max-width: 100%;
+  margin-top: 55px;
   background: var(--calendar-bg);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xl);
-  overflow: hidden;
+  overflow: visible;
   position: relative;
 }
 
@@ -90,6 +91,7 @@
   .wallCalendar {
     width: 100%;
     min-width: 100%;
+    margin-top: 45px;
     border-radius: var(--radius-md);
   }
 
