@@ -4,13 +4,9 @@
 
 A polished React calendar component inspired by physical wall calendars.
 
-<br />
-
 **React 19** | **TypeScript** | **Framer Motion** | **CSS Modules**
 
 </div>
-
-<br />
 
 ## Features
 
@@ -37,8 +33,6 @@ A polished React calendar component inspired by physical wall calendars.
 </tr>
 </table>
 
-<br />
-
 ## Tech Stack
 
 | Technology | Purpose |
@@ -50,16 +44,12 @@ A polished React calendar component inspired by physical wall calendars.
 | Framer Motion | Animations |
 | CSS Modules | Scoped styling |
 
-<br />
-
 ## Quick Start
 
 ```bash
 npm install
 npm run dev
 ```
-
-<br />
 
 ## Scripts
 
@@ -69,8 +59,6 @@ npm run dev
 | `npm run build` | Production build |
 | `npm run preview` | Preview build |
 | `npm run lint` | Run ESLint |
-
-<br />
 
 ## Usage
 
@@ -82,8 +70,6 @@ function App() {
 }
 ```
 
-<br />
-
 ## Keyboard Shortcuts
 
 | Key | Action |
@@ -91,8 +77,6 @@ function App() {
 | `Alt + Arrow` | Navigate months |
 | `Escape` | Clear selection |
 | `Enter` | Select date |
-
-<br />
 
 ## Project Structure
 
@@ -108,8 +92,6 @@ src/
 ├── utils/               # Date utilities
 └── types/               # TypeScript interfaces
 ```
-
-<br />
 
 ## License
 
