@@ -1,5 +1,6 @@
 import { memo, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { format } from 'date-fns';
 import { CalendarDay } from './CalendarDay';
 import { generateCalendarGrid, isDateInRange, isRangeStart, isRangeEnd, toDateKey } from '../../utils/dateUtils';
 import { getHoliday } from '../../utils/holidays';
@@ -51,6 +52,17 @@ export const CalendarGrid = memo(function CalendarGrid({
   // Use preview range for visual display (includes hover state)
   const displayRange = previewRange.start ? previewRange : selectedRange;
 
+  // Group days into weeks for proper row structure
+  const weeks = useMemo(() => {
+    const result: typeof calendarDays[] = [];
+    for (let i = 0; i < calendarDays.length; i += 7) {
+      result.push(calendarDays.slice(i, i + 7));
+    }
+    return result;
+  }, [calendarDays]);
+
+  const monthLabel = format(currentMonth, 'MMMM yyyy');
+
   return (
     <div className={styles.gridContainer}>
       <AnimatePresence mode="wait" custom={direction}>
@@ -58,7 +70,7 @@ export const CalendarGrid = memo(function CalendarGrid({
           key={currentMonth.toISOString()}
           className={styles.grid}
           role="grid"
-          aria-label="Calendar dates"
+          aria-label={`Calendar for ${monthLabel}`}
           custom={direction}
           variants={gridVariants}
           initial="enter"
@@ -70,27 +82,32 @@ export const CalendarGrid = memo(function CalendarGrid({
           }}
           style={{ perspective: 1000 }}
         >
-          {calendarDays.map((calendarDate, index) => {
-            const { date } = calendarDate;
-            const dateKey = toDateKey(date);
-            const holiday = getHoliday(date);
+          {weeks.map((week, weekIndex) => (
+            <div key={weekIndex} role="row" className={styles.gridRow}>
+              {week.map((calendarDate, dayIndex) => {
+                const { date } = calendarDate;
+                const dateKey = toDateKey(date);
+                const holiday = getHoliday(date);
+                const globalIndex = weekIndex * 7 + dayIndex;
 
-            return (
-              <CalendarDay
-                key={dateKey}
-                calendarDate={calendarDate}
-                isInRange={isDateInRange(date, displayRange.start, displayRange.end)}
-                isRangeStart={isRangeStart(date, displayRange.start, displayRange.end)}
-                isRangeEnd={isRangeEnd(date, displayRange.start, displayRange.end)}
-                isHovered={false}
-                hasNote={datesWithNotes.has(dateKey)}
-                holiday={holiday}
-                onSelect={onSelectDate}
-                onHover={onHoverDate}
-                tabIndex={index === 0 ? 0 : -1}
-              />
-            );
-          })}
+                return (
+                  <CalendarDay
+                    key={dateKey}
+                    calendarDate={calendarDate}
+                    isInRange={isDateInRange(date, displayRange.start, displayRange.end)}
+                    isRangeStart={isRangeStart(date, displayRange.start, displayRange.end)}
+                    isRangeEnd={isRangeEnd(date, displayRange.start, displayRange.end)}
+                    isHovered={false}
+                    hasNote={datesWithNotes.has(dateKey)}
+                    holiday={holiday}
+                    onSelect={onSelectDate}
+                    onHover={onHoverDate}
+                    tabIndex={globalIndex === 0 ? 0 : -1}
+                  />
+                );
+              })}
+            </div>
+          ))}
         </motion.div>
       </AnimatePresence>
     </div>

@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { motion } from 'framer-motion';
+import { format, subMonths, addMonths } from 'date-fns';
 import { MonthYearPicker } from './MonthYearPicker';
 import { DAYS_OF_WEEK } from '../../types/calendar.types';
 import styles from './Calendar.module.css';
@@ -21,13 +22,16 @@ export const CalendarHeader = memo(function CalendarHeader({
   hasSelection,
   onOpenAllNotes,
 }: CalendarHeaderProps) {
+  const prevMonth = format(subMonths(currentMonth, 1), 'MMMM yyyy');
+  const nextMonth = format(addMonths(currentMonth, 1), 'MMMM yyyy');
+
   return (
-    <div className={styles.header}>
+    <div className={styles.header} role="group" aria-label="Calendar navigation">
       <div className={styles.navigation}>
         <motion.button
           className={styles.navButton}
           onClick={() => onNavigate('prev')}
-          aria-label="Previous month"
+          aria-label={`Go to previous month, ${prevMonth}`}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
@@ -40,6 +44,7 @@ export const CalendarHeader = memo(function CalendarHeader({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            aria-hidden="true"
           >
             <path d="M12 15l-5-5 5-5" />
           </svg>
@@ -53,7 +58,7 @@ export const CalendarHeader = memo(function CalendarHeader({
         <motion.button
           className={styles.navButton}
           onClick={() => onNavigate('next')}
-          aria-label="Next month"
+          aria-label={`Go to next month, ${nextMonth}`}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
@@ -66,6 +71,7 @@ export const CalendarHeader = memo(function CalendarHeader({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            aria-hidden="true"
           >
             <path d="M8 5l5 5-5 5" />
           </svg>
@@ -76,6 +82,7 @@ export const CalendarHeader = memo(function CalendarHeader({
           <button
             className={styles.allNotesBtn}
             onClick={onOpenAllNotes}
+            aria-label="View all notes"
           >
             All Notes
           </button>
@@ -85,6 +92,7 @@ export const CalendarHeader = memo(function CalendarHeader({
           <motion.button
             className={styles.clearButton}
             onClick={onClearSelection}
+            aria-label="Clear date selection"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}

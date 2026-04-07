@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { format } from 'date-fns';
 import type { CalendarDate } from '../../types/calendar.types';
 import type { Holiday } from '../../utils/holidays';
 import styles from './CalendarDay.module.css';
@@ -59,6 +60,17 @@ export const CalendarDay = memo(function CalendarDay({
     }
   };
 
+  // Build comprehensive aria-label
+  const ariaLabel = [
+    format(date, 'EEEE, MMMM d, yyyy'), // "Wednesday, April 8, 2026"
+    isToday && 'today',
+    isRangeStart && 'range start',
+    isRangeEnd && !isRangeStart && 'range end',
+    isInRange && !isRangeStart && !isRangeEnd && 'in selected range',
+    hasNote && 'has note',
+    holiday && holiday.name,
+  ].filter(Boolean).join(', ');
+
   return (
     <button
       className={classNames}
@@ -68,8 +80,10 @@ export const CalendarDay = memo(function CalendarDay({
       onKeyDown={handleKeyDown}
       tabIndex={isCurrentMonth ? tabIndex : -1}
       disabled={!isCurrentMonth}
-      aria-label={`${dayOfMonth}${isToday ? ', today' : ''}${hasNote ? ', has note' : ''}${holiday ? `, ${holiday.name}` : ''}`}
-      aria-selected={isRangeStart || isRangeEnd}
+      role="gridcell"
+      aria-label={ariaLabel}
+      aria-selected={isInRange || isRangeStart || isRangeEnd}
+      aria-current={isToday ? 'date' : undefined}
       title={holiday?.name}
     >
       <span className={styles.dayNumber}>{dayOfMonth}</span>
