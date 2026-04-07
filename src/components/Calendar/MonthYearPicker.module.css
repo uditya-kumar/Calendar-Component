@@ -61,7 +61,7 @@
   justify-content: space-between;
   padding: var(--gap-md);
   border-bottom: 1px solid var(--border-light);
-  background: var(--calendar-paper);
+  background: white;
 }
 
 .yearNav {
@@ -92,16 +92,13 @@
   font-family: inherit;
   color: var(--text-primary);
   background: transparent;
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
+  border: none;
   cursor: pointer;
   text-align: center;
-  transition: all var(--transition-fast);
 }
 
 .yearButton:hover {
-  background: var(--hover-bg);
-  border-color: var(--text-muted);
+  color: var(--accent-blue);
 }
 
 /* Month grid */
