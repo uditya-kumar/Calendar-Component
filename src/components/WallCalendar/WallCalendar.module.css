@@ -10,6 +10,11 @@
   position: relative;
 }
 
+/* Hero wrapper with spiral overlay */
+.heroWrapper {
+  position: relative;
+}
+
 /* Paper texture overlay */
 .wallCalendar::before {
   content: '';

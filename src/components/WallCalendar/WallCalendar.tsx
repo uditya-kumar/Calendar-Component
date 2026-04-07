@@ -95,11 +95,11 @@ export const WallCalendar = memo(function WallCalendar({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
     >
-      {/* Spiral Binding */}
-      <SpiralBinding ringCount={40} />
-
-      {/* Hero Image Section */}
-      <HeroSection currentMonth={currentMonth} />
+      {/* Hero Section with Spiral Binding overlay */}
+      <div className={styles.heroWrapper}>
+        <HeroSection currentMonth={currentMonth} />
+        <SpiralBinding ringCount={40} />
+      </div>
 
       {/* Main Content: Notes + Calendar */}
       <div className={styles.content}>

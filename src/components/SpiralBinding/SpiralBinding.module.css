@@ -1,14 +1,17 @@
 .bindingContainer {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
-  display: flex;
-  flex-direction: column;
+  z-index: 10;
+  pointer-events: none;
 }
 
-/* Top spacer area for the binding */
+/* Top area for the binding - minimal height */
 .wallArea {
   position: relative;
-  height: 36px;
+  height: 22px;
   background: transparent;
   display: flex;
   flex-direction: column;
@@ -17,42 +20,23 @@
   overflow: visible;
 }
 
-/* The main horizontal wire */
+/* The main horizontal wire - hidden */
 .mainWire {
-  position: absolute;
-  top: 18px;
-  left: 30px;
-  right: 30px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  height: 20px;
-  z-index: 1;
+  display: none;
 }
 
 .wireLeft,
 .wireRight {
-  flex: 1;
-  height: 1.5px;
-  background: #2d2d2d;
+  display: none;
 }
 
-/* Hook container in the center */
+/* Hook container - hidden */
 .hookContainer {
-  position: relative;
-  width: 24px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
+  display: none;
 }
 
 .hook {
-  width: 16px;
-  height: 20px;
-  border: 1.5px solid #2d2d2d;
-  border-bottom: none;
-  border-radius: 8px 8px 0 0;
-  background: transparent;
+  display: none;
 }
 
 /* Container for all coils */
@@ -83,8 +67,7 @@
 }
 
 .hookGap {
-  width: 30px;
-  flex-shrink: 0;
+  display: none;
 }
 
 /* Each calendar ring contains two adjacent wires */
@@ -110,9 +93,9 @@
 }
 
 .coilWire {
-  width: 6px;
+  width: 7px;
   height: 20px;
-  border: 1.5px solid #3a3a3a;
+  border: 2.5px solid #3a3a3a;
   border-right: none;
   border-radius: 7px 0 0 7px;
   background: linear-gradient(
@@ -136,23 +119,19 @@
   margin-left: -2px;
 }
 
-/* Paper edge */
+/* Paper edge - hidden since spirals overlay image */
 .paperEdge {
-  height: 10px;
-  background: linear-gradient(to bottom, #fafafa 0%, #ffffff 100%);
-  border-top: 1px solid #ebebeb;
-  position: relative;
-  z-index: 3;
+  display: none;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .wallArea {
-    height: 32px;
+    height: 18px;
   }
 
   .mainWire {
-    top: 16px;
+    top: 2px;
     left: 20px;
     right: 20px;
     height: 16px;
@@ -194,8 +173,9 @@
   }
 
   .coilWire {
-    width: 5px;
+    width: 6px;
     height: 16px;
+    border-width: 2px;
     border-radius: 5px 0 0 5px;
   }
 
@@ -203,18 +183,15 @@
     border-radius: 4px 0 0 4px;
   }
 
-  .paperEdge {
-    height: 8px;
-  }
 }
 
 @media (max-width: 480px) {
   .wallArea {
-    height: 28px;
+    height: 14px;
   }
 
   .mainWire {
-    top: 13px;
+    top: 0;
     left: 15px;
     right: 15px;
     height: 14px;
@@ -222,7 +199,7 @@
 
   .wireLeft,
   .wireRight {
-    height: 1px;
+    height: 1.5px;
   }
 
   .hookContainer {
@@ -262,18 +239,14 @@
   }
 
   .coilWire {
-    width: 4px;
+    width: 5px;
     height: 12px;
-    border-width: 1px;
+    border-width: 1.5px;
     border-radius: 4px 0 0 4px;
   }
 
   .coilWire::before {
     display: none;
-  }
-
-  .paperEdge {
-    height: 6px;
   }
 }
 
