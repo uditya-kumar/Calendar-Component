@@ -27,6 +27,21 @@
   pointer-events: none;
 }
 
+.overlay::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 44%;
+  background: linear-gradient(
+    to top,
+    rgba(8, 17, 28, 0.62) 0%,
+    rgba(8, 17, 28, 0.34) 36%,
+    rgba(8, 17, 28, 0) 100%
+  );
+}
+
 .monthYear {
   position: absolute;
   right: 26px;
@@ -36,53 +51,61 @@
   align-items: flex-end;
   color: white;
   z-index: 3;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
 }
 
 .year {
-  font-size: 1.9rem;
-  font-weight: 500;
-  letter-spacing: 1px;
+  font-size: clamp(1.45rem, 2.6vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
   line-height: 1;
-  opacity: 0.92;
+  opacity: 0.98;
 }
 
 .month {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: 1.2px;
+  font-size: clamp(1.55rem, 2.7vw, 2.45rem);
+  font-weight: 800;
+  letter-spacing: 0.1em;
   line-height: 1.1;
 }
 
 @media (max-width: 768px) {
+  .overlay::before {
+    height: 48%;
+  }
+
   .monthYear {
     right: 18px;
     bottom: 12px;
   }
 
   .year {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
   }
 
   .month {
-    font-size: 1.45rem;
-    letter-spacing: 1px;
+    font-size: 1.34rem;
+    letter-spacing: 0.08em;
   }
 }
 
 @media (max-width: 480px) {
+  .overlay::before {
+    height: 54%;
+  }
+
   .monthYear {
     right: 14px;
     bottom: 10px;
   }
 
   .year {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .month {
-    font-size: 1.1rem;
-    letter-spacing: 0.6px;
+    font-size: 0.98rem;
+    letter-spacing: 0.06em;
   }
 }
 
