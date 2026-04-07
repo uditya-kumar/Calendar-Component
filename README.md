@@ -4,7 +4,11 @@
 
 A polished React calendar component inspired by physical wall calendars.
 
-**React 19** | **TypeScript** | **Framer Motion** | **CSS Modules**
+![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=flat&logo=vite&logoColor=white)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-11.15-FF0080?style=flat&logo=framer&logoColor=white)
+![date-fns](https://img.shields.io/badge/date--fns-4.1-770C56?style=flat&logo=javascript&logoColor=white)
 
 </div>
 
