@@ -71,6 +71,10 @@
     height: 50px;
   }
 
+  .nail {
+    top: 2px;
+  }
+
   .wireLeft {
     top: 45px;
     transform: rotate(-12deg);
