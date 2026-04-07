@@ -1,0 +1,1 @@
+export { WallCalendar } from './WallCalendar';

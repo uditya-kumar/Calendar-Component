@@ -1,0 +1,159 @@
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+}
+
+/* Header with navigation */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+
+.navButton {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.navButton:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.clearButton {
+  margin-left: auto;
+  padding: var(--gap-sm) var(--gap-md);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--accent-blue);
+  background: transparent;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+.clearButton:hover {
+  background: var(--range-hover-bg);
+}
+
+/* Week days header */
+.weekDays {
+  display: grid;
+  grid-template-columns: repeat(7, var(--cell-size));
+  gap: var(--gap-xs);
+  justify-content: center;
+}
+
+.weekDay {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.weekDay.weekend {
+  color: var(--weekend-blue);
+}
+
+/* Grid container for animation */
+.gridContainer {
+  position: relative;
+  overflow: hidden;
+  min-height: calc(6 * var(--cell-size) + 5 * var(--gap-xs));
+}
+
+/* Calendar grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, var(--cell-size));
+  gap: var(--gap-xs);
+  justify-content: center;
+}
+
+/* Selection info display */
+.selectionInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  padding: var(--gap-md);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  background: var(--range-bg);
+  border-radius: var(--radius-md);
+  margin-top: var(--gap-md);
+}
+
+.selectionInfo strong {
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+/* Holiday banner - pill style */
+.holidayBanner {
+  display: inline-block;
+  margin: 0;
+  padding: 6px 14px;
+  background: #e6ffea;
+  border-radius: 20px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: #007b28;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .weekDays {
+    grid-template-columns: repeat(7, var(--cell-size));
+  }
+
+  .grid {
+    grid-template-columns: repeat(7, var(--cell-size));
+  }
+
+  .weekDay {
+    font-size: 10px;
+    height: 24px;
+  }
+
+  .holidayBanner {
+    padding: var(--gap-sm) var(--gap-md);
+    gap: var(--gap-sm);
+  }
+
+  .holidayIcon {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .holidayName {
+    font-size: var(--font-size-sm);
+  }
+
+  .holidayDate {
+    font-size: 10px;
+  }
+
+  .holidayType {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+}

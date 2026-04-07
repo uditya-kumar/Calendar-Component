@@ -1,0 +1,158 @@
+.day {
+  position: relative;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  user-select: none;
+}
+
+.day:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: -2px;
+  border-radius: var(--radius-sm);
+  z-index: 1;
+}
+
+/* Outside month (gray dates) */
+.outsideMonth {
+  color: var(--text-disabled);
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Weekend days (Saturday, Sunday) */
+.weekend:not(.outsideMonth) {
+  color: var(--weekend-blue);
+}
+
+/* Today indicator */
+.today {
+  font-weight: 700;
+}
+
+.todayRing {
+  position: absolute;
+  inset: 4px;
+  border: 2px solid var(--accent-blue);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+/* Hover state */
+.day:not(.outsideMonth):hover {
+  background: var(--hover-bg);
+  border-radius: var(--radius-sm);
+}
+
+.hovered:not(.outsideMonth) {
+  background: var(--range-hover-bg);
+}
+
+/* In range (between start and end) */
+.inRange {
+  background: var(--range-bg) !important;
+  border-radius: 0;
+}
+
+/* Range start */
+.rangeStart {
+  background: var(--selected-bg) !important;
+  color: var(--selected-text) !important;
+  border-radius: 50% 0 0 50%;
+}
+
+.rangeStart .todayRing {
+  border-color: var(--selected-text);
+}
+
+/* Range end */
+.rangeEnd {
+  background: var(--selected-bg) !important;
+  color: var(--selected-text) !important;
+  border-radius: 0 50% 50% 0;
+}
+
+.rangeEnd .todayRing {
+  border-color: var(--selected-text);
+}
+
+/* Single day selection (start === end) */
+.singleDay {
+  border-radius: 50%;
+}
+
+/* Note indicator dot */
+.noteIndicator {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 5px;
+  height: 5px;
+  background: var(--accent-blue);
+  border-radius: 50%;
+}
+
+.rangeStart .noteIndicator,
+.rangeEnd .noteIndicator {
+  background: var(--selected-text);
+}
+
+/* Day number */
+.dayNumber {
+  position: relative;
+  z-index: 1;
+}
+
+/* Holiday indicator - light green dot */
+.holidayIndicator {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 5px;
+  height: 5px;
+  background: #22c55e;
+  border-radius: 50%;
+}
+
+.rangeStart .holidayIndicator,
+.rangeEnd .holidayIndicator {
+  background: #86efac;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .day {
+    font-size: var(--font-size-xs);
+  }
+
+  .todayRing {
+    inset: 2px;
+  }
+
+  .noteIndicator {
+    bottom: 2px;
+    width: 3px;
+    height: 3px;
+  }
+}

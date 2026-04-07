@@ -1,0 +1,187 @@
+/* CSS Reset and Variables */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+
+  /* Calendar Colors */
+  --calendar-bg: #ffffff;
+  --calendar-paper: #fafafa;
+  --text-primary: #1a1a1a;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+  --text-disabled: #d1d5db;
+
+  /* Accent Colors */
+  --accent-blue: #2563eb;
+  --accent-blue-light: #3b82f6;
+  --accent-blue-dark: #1d4ed8;
+  --weekend-blue: #3b82f6;
+
+  /* Range Selection */
+  --range-bg: rgba(59, 130, 246, 0.12);
+  --range-hover-bg: rgba(59, 130, 246, 0.08);
+
+  /* Interactive States */
+  --hover-bg: rgba(0, 0, 0, 0.04);
+  --selected-bg: var(--accent-blue);
+  --selected-text: #ffffff;
+  --focus-ring: rgba(59, 130, 246, 0.5);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 6px 10px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+
+  /* Borders */
+  --border-light: #e5e7eb;
+  --border-medium: #d1d5db;
+
+  /* Spacing */
+  --cell-size: 44px;
+  --gap-xs: 2px;
+  --gap-sm: 4px;
+  --gap-md: 8px;
+  --gap-lg: 16px;
+  --gap-xl: 24px;
+  --gap-2xl: 32px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* Calendar Dimensions */
+  --calendar-width: 400px;
+  --notes-width: 280px;
+  --hero-height: 280px;
+
+  /* Spiral Binding */
+  --spiral-color: #4a4a4a;
+  --spiral-highlight: #d4d4d4;
+}
+
+/* Responsive Variables */
+@media (max-width: 1024px) {
+  :root {
+    --calendar-width: 360px;
+    --notes-width: 240px;
+    --hero-height: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --cell-size: 40px;
+    --calendar-width: 100%;
+    --notes-width: 100%;
+    --hero-height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --cell-size: 36px;
+    --hero-height: 180px;
+  }
+}
+
+/* Base Styles */
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gap-xl);
+}
+
+/* Focus Styles */
+:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Selection */
+::selection {
+  background: var(--accent-blue);
+  color: white;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white;
+  }
+
+  #root {
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

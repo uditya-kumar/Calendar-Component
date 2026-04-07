@@ -1,0 +1,139 @@
+.wallCalendar {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  max-width: 100%;
+  background: var(--calendar-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Paper texture overlay */
+.wallCalendar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Main content area */
+.content {
+  display: flex;
+  position: relative;
+  z-index: 1;
+  align-items: flex-start;
+}
+
+/* Calendar section */
+.calendarSection {
+  flex: 1;
+  padding: var(--gap-md) var(--gap-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+/* Selection info display */
+.selectionInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gap-sm) var(--gap-md);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  background: var(--range-bg);
+  border-radius: var(--radius-md);
+}
+
+.selectionInfo strong {
+  color: var(--accent-blue);
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+/* Keyboard shortcuts hint */
+.shortcuts {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap-lg);
+  padding: var(--gap-sm) var(--gap-lg);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  background: var(--calendar-paper);
+  border-top: 1px solid var(--border-light);
+}
+
+.shortcuts span {
+  opacity: 0.7;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .wallCalendar {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .shortcuts {
+    flex-wrap: wrap;
+    gap: var(--gap-md);
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .wallCalendar {
+    width: 100%;
+    border-radius: var(--radius-md);
+  }
+
+  .content {
+    flex-direction: column;
+  }
+
+  .calendarSection {
+    padding: var(--gap-md);
+  }
+
+  .shortcuts {
+    display: none;
+  }
+}
+
+/* Responsive - Small mobile */
+@media (max-width: 480px) {
+  .calendarSection {
+    padding: var(--gap-sm);
+  }
+
+  .selectionInfo {
+    font-size: var(--font-size-xs);
+    padding: var(--gap-xs) var(--gap-sm);
+  }
+}
+
+/* Print styles */
+@media print {
+  .wallCalendar {
+    box-shadow: none;
+    border: 1px solid var(--border-light);
+    page-break-inside: avoid;
+  }
+
+  .wallCalendar::before {
+    display: none;
+  }
+
+  .shortcuts {
+    display: none;
+  }
+
+  .selectionInfo {
+    display: none;
+  }
+}

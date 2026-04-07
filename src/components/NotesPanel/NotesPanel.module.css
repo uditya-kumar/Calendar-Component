@@ -1,0 +1,369 @@
+.panel {
+  position: relative;
+  width: var(--notes-width);
+  height: 360px;
+  background: var(--calendar-bg);
+  border-right: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width var(--transition-slow);
+}
+
+.collapsed {
+  width: 48px;
+  min-width: 48px;
+}
+
+/* Toggle button for mobile */
+.toggleButton {
+  display: none;
+  width: 100%;
+  padding: var(--gap-md);
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-sm);
+  color: var(--text-secondary);
+  background: transparent;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.toggleIcon {
+  transition: transform var(--transition-base);
+}
+
+.notesLabel {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--gap-md) var(--gap-lg);
+  background: white;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.title {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.noteCount {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  background: #f04842;
+  border-radius: 10px;
+}
+
+/* Selected Date Section - Event Style */
+.selectedDateSection {
+  padding: var(--gap-lg);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.titleInput {
+  width: 100%;
+  padding: 0;
+  margin-bottom: var(--gap-md);
+  font-family: inherit;
+  font-size: var(--font-size-lg);
+  font-weight: 400;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.titleInput::placeholder {
+  color: var(--text-muted);
+}
+
+.timeRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-sm);
+}
+
+.timeIcon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.timePickerWrapper {
+  position: relative;
+}
+
+.timeButton {
+  padding: 4px 8px;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.timeButton:hover {
+  background: var(--hover-bg);
+}
+
+.timeDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  width: 110px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+}
+
+.timeOption {
+  width: 100%;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.timeOption:hover {
+  background: #f3f4f6;
+}
+
+.timeOption.selected {
+  background: var(--accent-blue);
+  color: white;
+}
+
+.timeArrow {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.deleteEditorNote {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-left: auto;
+  opacity: 0.5;
+}
+
+.deleteEditorNote:hover {
+  color: #dc2626;
+  opacity: 1;
+}
+
+.dateDisplay {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  padding-left: 24px;
+}
+
+/* Notes List */
+.notesList {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--gap-md) var(--gap-lg);
+}
+
+/* Slim scrollbar */
+.notesList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.notesList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notesList::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 4px;
+}
+
+.notesList::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Empty State - Minimal */
+.emptyState {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gap-xl);
+  text-align: center;
+}
+
+.emptyIcon {
+  color: var(--text-muted);
+  opacity: 0.4;
+  margin-bottom: var(--gap-sm);
+}
+
+.emptyText {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+  margin: 0 0 4px;
+}
+
+.emptyHint {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  opacity: 0.7;
+  margin: 0;
+}
+
+/* Note Card - Boxed style */
+.noteCard {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  padding: var(--gap-md);
+  margin-bottom: var(--gap-sm);
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast);
+  cursor: pointer;
+}
+
+.noteCard:last-child {
+  margin-bottom: 0;
+}
+
+.noteCard:hover {
+  border-color: var(--text-muted);
+}
+
+.noteCardContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.noteContent {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.noteCardMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  flex-wrap: wrap;
+}
+
+.noteTime {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.noteDate {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.deleteButton {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.deleteButton:hover {
+  color: #dc2626;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .panel {
+    width: 100%;
+    min-height: auto;
+    border-right: none;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .toggleButton {
+    display: flex;
+  }
+
+  .collapsed .content {
+    display: none;
+  }
+
+  .header {
+    padding: var(--gap-md);
+  }
+
+  .notesList {
+    max-height: 300px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .panel {
+    border-right: none;
+    page-break-inside: avoid;
+  }
+
+  .toggleButton,
+  .deleteButton,
+  .deleteEditorNote {
+    display: none;
+  }
+}
