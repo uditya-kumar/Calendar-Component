@@ -9,6 +9,7 @@ import { BottomSheet } from '../BottomSheet';
 import { AllNotesModal } from '../AllNotesModal';
 import { useCalendarState } from '../../hooks/useCalendarState';
 import { useNotes } from '../../hooks/useNotes';
+import { useSwipe } from '../../hooks/useSwipe';
 import { getNoteDateKeys } from '../../utils/noteUtils';
 import { applyMonthTheme } from '../../utils/themes';
 import styles from './WallCalendar.module.css';
@@ -42,6 +43,13 @@ export const WallCalendar = memo(function WallCalendar({
   const [isMobile, setIsMobile] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isAllNotesOpen, setIsAllNotesOpen] = useState(false);
+
+  // Swipe gestures for mobile month navigation
+  const swipeHandlers = useSwipe({
+    onSwipeLeft: () => navigateMonth('next'),
+    onSwipeRight: () => navigateMonth('prev'),
+    minSwipeDistance: 50,
+  });
 
   // Track window size for responsive behavior
   useEffect(() => {
@@ -131,6 +139,7 @@ export const WallCalendar = memo(function WallCalendar({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
+      {...swipeHandlers}
     >
       {/* Hero Section with Spiral Binding overlay */}
       <div className={styles.heroWrapper}>
