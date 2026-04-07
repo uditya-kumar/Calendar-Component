@@ -1,0 +1,44 @@
+.toggle {
+  position: fixed;
+  top: var(--gap-lg);
+  right: var(--gap-lg);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--calendar-bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  color: var(--text-secondary);
+  z-index: 1000;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-md);
+}
+
+.toggle:hover {
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-md);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .toggle {
+    width: 42px;
+    height: 42px;
+    top: var(--gap-md);
+    right: var(--gap-md);
+  }
+
+  .toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+}

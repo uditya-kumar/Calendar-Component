@@ -10,7 +10,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: white;
+  background: var(--calendar-bg);
   border-radius: 16px 16px 0 0;
   z-index: 101;
   min-height: auto;
@@ -142,7 +142,7 @@
   width: 120px;
   max-height: 200px;
   overflow-y: auto;
-  background: white;
+  background: var(--calendar-bg);
   border-radius: var(--radius-md);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   z-index: 10;

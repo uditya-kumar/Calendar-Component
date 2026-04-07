@@ -17,7 +17,7 @@
   width: 100%;
   max-width: 300px;
   height: 340px;
-  background: white;
+  background: var(--calendar-bg);
   border-radius: var(--radius-lg);
   z-index: 101;
   overflow: hidden;
@@ -32,7 +32,7 @@
   justify-content: space-between;
   padding: var(--gap-md) var(--gap-lg);
   border-bottom: 1px solid var(--border-light);
-  background: white;
+  background: var(--calendar-bg);
   flex-shrink: 0;
 }
 
@@ -122,7 +122,7 @@
   gap: var(--gap-md);
   padding: var(--gap-md);
   margin-bottom: var(--gap-sm);
-  background: white;
+  background: var(--calendar-bg);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-md);
   cursor: pointer;

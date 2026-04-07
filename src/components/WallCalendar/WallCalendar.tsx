@@ -7,9 +7,11 @@ import { Calendar } from '../Calendar';
 import { NotesPanel } from '../NotesPanel';
 import { BottomSheet } from '../BottomSheet';
 import { AllNotesModal } from '../AllNotesModal';
+import { ThemeToggle } from '../ThemeToggle';
 import { useCalendarState } from '../../hooks/useCalendarState';
 import { useNotes } from '../../hooks/useNotes';
 import { useSwipe } from '../../hooks/useSwipe';
+import { useDarkMode } from '../../hooks/useDarkMode';
 import { getNoteDateKeys } from '../../utils/noteUtils';
 import { applyMonthTheme } from '../../utils/themes';
 import styles from './WallCalendar.module.css';
@@ -39,6 +41,8 @@ export const WallCalendar = memo(function WallCalendar({
     saveNote,
     deleteNote,
   } = useNotes();
+
+  const [theme, toggleTheme] = useDarkMode();
 
   const [isMobile, setIsMobile] = useState(false);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
@@ -141,6 +145,9 @@ export const WallCalendar = memo(function WallCalendar({
       transition={{ duration: 0.5, ease: 'easeOut' }}
       {...swipeHandlers}
     >
+      {/* Theme Toggle */}
+      <ThemeToggle theme={theme} onToggle={toggleTheme} />
+
       {/* Hero Section with Spiral Binding overlay */}
       <div className={styles.heroWrapper}>
         <HeroSection currentMonth={currentMonth} />

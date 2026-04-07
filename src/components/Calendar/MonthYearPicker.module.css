@@ -60,7 +60,7 @@
   justify-content: space-between;
   padding: var(--gap-md);
   border-bottom: 1px solid var(--border-light);
-  background: white;
+  background: var(--calendar-bg);
 }
 
 .yearNav {
