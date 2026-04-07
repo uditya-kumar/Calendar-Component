@@ -1,21 +1,33 @@
 import { memo, useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { format } from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 import type { DateRange, Note } from '../../types/calendar.types';
+import {
+  createRangeNoteKey,
+  getNoteDateKeys,
+  getPrimaryDateFromNoteKey,
+  noteIntersectsMonth,
+  parseRangeNoteKey,
+} from '../../utils/noteUtils';
 import styles from './NotesPanel.module.css';
 
 interface NotesPanelProps {
   currentMonth: Date;
   selectedRange: DateRange;
   notes: Note[];
-  onSaveNote: (date: Date | 'general', content: string, startTime?: string, endTime?: string) => void;
+  onSaveNote: (
+    date: Date | { start: Date; end: Date } | 'general',
+    content: string,
+    startTime?: string,
+    endTime?: string,
+    noteId?: string
+  ) => void;
   onDeleteNote: (noteId: string) => void;
   onSelectDate: (date: Date) => void;
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
 }
 
-// Format time for display (3:45 PM)
 function formatTime(time: string): string {
   const [h, m] = time.split(':').map(Number);
   const period = h >= 12 ? 'PM' : 'AM';
@@ -23,7 +35,6 @@ function formatTime(time: string): string {
   return `${hour}:${m.toString().padStart(2, '0')} ${period}`;
 }
 
-// Generate time options in 15-minute intervals
 function generateTimeOptions(): { value: string; label: string }[] {
   const options: { value: string; label: string }[] = [];
   for (let h = 0; h < 24; h++) {
@@ -36,6 +47,16 @@ function generateTimeOptions(): { value: string; label: string }[] {
     }
   }
   return options;
+}
+
+function getNoteDateLabel(note: Note): string {
+  const range = parseRangeNoteKey(note.date);
+  if (range) {
+    return `${format(range.start, 'EEE MMM d')} - ${format(range.end, 'EEE MMM d')}`;
+  }
+
+  const primaryDate = getPrimaryDateFromNoteKey(note.date);
+  return primaryDate ? format(primaryDate, 'EEE MMM d') : '';
 }
 
 const TIME_OPTIONS = generateTimeOptions();
@@ -53,72 +74,109 @@ export const NotesPanel = memo(function NotesPanel({
   const [newNoteContent, setNewNoteContent] = useState('');
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('09:30');
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [activeDropdown, setActiveDropdown] = useState<'start' | 'end' | null>(null);
-  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [inlineEditId, setInlineEditId] = useState<string | null>(null);
+  const [inlineContent, setInlineContent] = useState('');
+  const [inlineStartTime, setInlineStartTime] = useState('09:00');
+  const [inlineEndTime, setInlineEndTime] = useState('09:30');
+  const [inlineDropdown, setInlineDropdown] = useState<'start' | 'end' | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const inlineDropdownRef = useRef<HTMLDivElement>(null);
 
   const hasSelectedDate = selectedRange.start !== null;
-
-  // Filter notes - show selected date note or current month's notes
-  const displayedNotes = hasSelectedDate
-    ? notes.filter(n => n.date === format(selectedRange.start!, 'yyyy-MM-dd'))
-    : notes.filter(n => {
-        if (n.date === 'general') return false;
-        const noteDate = new Date(n.date);
-        return noteDate.getFullYear() === currentMonth.getFullYear() &&
-               noteDate.getMonth() === currentMonth.getMonth();
-      });
+  const isRangeSelection =
+    selectedRange.start !== null &&
+    selectedRange.end !== null &&
+    !isSameDay(selectedRange.start, selectedRange.end);
 
   const selectedDateKey = selectedRange.start
     ? format(selectedRange.start, 'yyyy-MM-dd')
     : null;
 
-  const selectedDateNote = selectedDateKey
-    ? notes.find(n => n.date === selectedDateKey)
+  const selectedRangeKey = selectedRange.start && selectedRange.end
+    ? createRangeNoteKey(selectedRange.start, selectedRange.end)
     : null;
 
-  // Reset note content and time when selection changes
-  useEffect(() => {
-    if (selectedDateNote) {
-      setNewNoteContent(selectedDateNote.content);
-      setStartTime(selectedDateNote.startTime || '09:00');
-      setEndTime(selectedDateNote.endTime || '09:30');
-    } else {
-      setNewNoteContent('');
-      setStartTime('09:00');
-      setEndTime('09:30');
-    }
-  }, [selectedDateKey, selectedDateNote]);
+  const selectedDateNotes = selectedDateKey
+    ? isRangeSelection && selectedRangeKey
+      ? notes.filter(n => n.date === selectedRangeKey)
+      : notes.filter(n => getNoteDateKeys(n.date).includes(selectedDateKey))
+    : [];
 
-  // Auto-save with debounce
-  useEffect(() => {
-    const contentChanged = newNoteContent !== (selectedDateNote?.content || '');
-    const timeChanged = startTime !== (selectedDateNote?.startTime || '09:00') ||
-                        endTime !== (selectedDateNote?.endTime || '09:30');
+  const displayedNotes = hasSelectedDate
+    ? selectedDateNotes
+    : notes.filter(n => noteIntersectsMonth(n.date, currentMonth));
 
-    if (hasSelectedDate && (contentChanged || timeChanged)) {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
-      saveTimeoutRef.current = setTimeout(() => {
-        if (selectedRange.start && newNoteContent.trim()) {
-          onSaveNote(selectedRange.start, newNoteContent, startTime, endTime);
-        }
-      }, 800);
-    }
-    return () => {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
+  useEffect(() => {
+    setNewNoteContent('');
+    setStartTime('09:00');
+    setEndTime('09:30');
+    setEditingNoteId(null);
+    setActiveDropdown(null);
+    setInlineEditId(null);
+  }, [selectedDateKey, selectedRangeKey]);
+
+  // Close inline dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (inlineDropdownRef.current && !inlineDropdownRef.current.contains(e.target as Node)) {
+        setInlineDropdown(null);
       }
     };
-  }, [newNoteContent, startTime, endTime, hasSelectedDate, selectedDateNote, selectedRange.start, onSaveNote]);
+    if (inlineDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [inlineDropdown]);
+
+  const handleStartInlineEdit = useCallback((note: Note) => {
+    setInlineEditId(note.id);
+    setInlineContent(note.content);
+    setInlineStartTime(note.startTime || '09:00');
+    setInlineEndTime(note.endTime || '09:30');
+  }, []);
+
+  const handleCancelInlineEdit = useCallback(() => {
+    setInlineEditId(null);
+    setInlineContent('');
+    setInlineStartTime('09:00');
+    setInlineEndTime('09:30');
+    setInlineDropdown(null);
+  }, []);
+
+  const handleSaveInlineEdit = useCallback((note: Note) => {
+    if (!inlineContent.trim()) return;
+
+    const range = parseRangeNoteKey(note.date);
+    const target = range
+      ? { start: range.start, end: range.end }
+      : getPrimaryDateFromNoteKey(note.date) || note.date;
+
+    onSaveNote(target as Date | { start: Date; end: Date } | 'general', inlineContent.trim(), inlineStartTime, inlineEndTime, note.id);
+    handleCancelInlineEdit();
+  }, [inlineContent, inlineStartTime, inlineEndTime, onSaveNote, handleCancelInlineEdit]);
+
+  const handleInlineTimeSelect = useCallback((time: string) => {
+    if (inlineDropdown === 'start') {
+      setInlineStartTime(time);
+    } else if (inlineDropdown === 'end') {
+      setInlineEndTime(time);
+    }
+    setInlineDropdown(null);
+  }, [inlineDropdown]);
 
   const handleDeleteNote = useCallback((noteId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     onDeleteNote(noteId);
-  }, [onDeleteNote]);
+    if (editingNoteId === noteId) {
+      setNewNoteContent('');
+      setStartTime('09:00');
+      setEndTime('09:30');
+      setEditingNoteId(null);
+    }
+  }, [onDeleteNote, editingNoteId]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -140,6 +198,33 @@ export const NotesPanel = memo(function NotesPanel({
     setActiveDropdown(null);
   }, [activeDropdown]);
 
+
+  const handleSaveCurrentNote = useCallback(() => {
+    if (!selectedRange.start || !newNoteContent.trim()) {
+      return;
+    }
+
+    const target = isRangeSelection && selectedRange.end
+      ? { start: selectedRange.start, end: selectedRange.end }
+      : selectedRange.start;
+
+    onSaveNote(target, newNoteContent.trim(), startTime, endTime, editingNoteId || undefined);
+
+    setNewNoteContent('');
+    setStartTime('09:00');
+    setEndTime('09:30');
+    setEditingNoteId(null);
+  }, [
+    selectedRange.start,
+    selectedRange.end,
+    isRangeSelection,
+    newNoteContent,
+    startTime,
+    endTime,
+    editingNoteId,
+    onSaveNote,
+  ]);
+
   return (
     <motion.div
       className={`${styles.panel} ${isCollapsed ? styles.collapsed : ''}`}
@@ -147,7 +232,6 @@ export const NotesPanel = memo(function NotesPanel({
       animate={{ width: isCollapsed ? 48 : 'var(--notes-width)' }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
-      {/* Header - always visible, clickable on mobile */}
       <div
         className={styles.header}
         onClick={onToggleCollapse}
@@ -184,8 +268,6 @@ export const NotesPanel = memo(function NotesPanel({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-
-            {/* Selected Date Editor - Event Style */}
             {hasSelectedDate && (
               <motion.div
                 className={styles.selectedDateSection}
@@ -193,7 +275,6 @@ export const NotesPanel = memo(function NotesPanel({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                {/* Note Title Input */}
                 <input
                   type="text"
                   className={styles.titleInput}
@@ -202,7 +283,6 @@ export const NotesPanel = memo(function NotesPanel({
                   placeholder="Add title"
                 />
 
-                {/* Time Row */}
                 <div className={styles.timeRow} ref={dropdownRef}>
                   <svg className={styles.timeIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="12" cy="12" r="10" />
@@ -254,28 +334,150 @@ export const NotesPanel = memo(function NotesPanel({
                       </div>
                     )}
                   </div>
+                </div>
 
-                  {selectedDateNote && (
+                <div className={styles.dateDisplay}>
+                  {isRangeSelection && selectedRange.end
+                    ? `${format(selectedRange.start!, 'EEE MMM d')} - ${format(selectedRange.end, 'EEE MMM d')}`
+                    : format(selectedRange.start!, 'EEE MMM d')}
+                </div>
+
+                <div className={styles.editorActions}>
+                  <button
+                    className={styles.primaryAction}
+                    onClick={handleSaveCurrentNote}
+                    disabled={!newNoteContent.trim()}
+                  >
+                    {editingNoteId ? 'Update note' : 'Add note'}
+                  </button>
+                  {editingNoteId && (
                     <button
-                      className={styles.deleteEditorNote}
-                      onClick={(e) => handleDeleteNote(selectedDateNote.id, e)}
-                      aria-label="Delete note"
+                      className={styles.secondaryAction}
+                      onClick={() => {
+                        setEditingNoteId(null);
+                        setNewNoteContent('');
+                        setStartTime('09:00');
+                        setEndTime('09:30');
+                      }}
                     >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M18 6L6 18M6 6l12 12" />
-                      </svg>
+                      Cancel
                     </button>
                   )}
                 </div>
 
-                {/* Date Display */}
-                <div className={styles.dateDisplay}>
-                  {format(selectedRange.start!, 'EEE MMM d')}
-                </div>
+                {selectedDateNotes.length > 0 && (
+                  <div className={styles.selectedNotesList}>
+                    {selectedDateNotes.map(note => (
+                      <div key={note.id} className={`${styles.noteCard} ${inlineEditId === note.id ? styles.noteCardEditing : ''}`}>
+                        {inlineEditId === note.id ? (
+                          <div className={styles.inlineEditor}>
+                            <input
+                              type="text"
+                              className={styles.inlineInput}
+                              value={inlineContent}
+                              onChange={(e) => setInlineContent(e.target.value)}
+                              placeholder="Note title"
+                              autoFocus
+                            />
+                            <div className={styles.inlineTimeRow} ref={inlineDropdownRef}>
+                              <div className={styles.timePickerWrapper}>
+                                <button
+                                  className={styles.timeButton}
+                                  onClick={() => setInlineDropdown(inlineDropdown === 'start' ? null : 'start')}
+                                >
+                                  {formatTime(inlineStartTime)}
+                                </button>
+                                {inlineDropdown === 'start' && (
+                                  <div className={styles.timeDropdown}>
+                                    {TIME_OPTIONS.map(opt => (
+                                      <button
+                                        key={opt.value}
+                                        className={`${styles.timeOption} ${opt.value === inlineStartTime ? styles.selected : ''}`}
+                                        onClick={() => handleInlineTimeSelect(opt.value)}
+                                      >
+                                        {opt.label}
+                                      </button>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                              <span className={styles.timeArrow}>→</span>
+                              <div className={styles.timePickerWrapper}>
+                                <button
+                                  className={styles.timeButton}
+                                  onClick={() => setInlineDropdown(inlineDropdown === 'end' ? null : 'end')}
+                                >
+                                  {formatTime(inlineEndTime)}
+                                </button>
+                                {inlineDropdown === 'end' && (
+                                  <div className={styles.timeDropdown}>
+                                    {TIME_OPTIONS.map(opt => (
+                                      <button
+                                        key={opt.value}
+                                        className={`${styles.timeOption} ${opt.value === inlineEndTime ? styles.selected : ''}`}
+                                        onClick={() => handleInlineTimeSelect(opt.value)}
+                                      >
+                                        {opt.label}
+                                      </button>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className={styles.inlineActions}>
+                              <button
+                                className={styles.inlineSaveBtn}
+                                onClick={() => handleSaveInlineEdit(note)}
+                                disabled={!inlineContent.trim()}
+                              >
+                                Save
+                              </button>
+                              <button
+                                className={styles.inlineCancelBtn}
+                                onClick={handleCancelInlineEdit}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <div className={styles.noteCardContent}>
+                              <p className={styles.noteContent}>{note.content}</p>
+                              <div className={styles.noteCardMeta}>
+                                {note.startTime && note.endTime && (
+                                  <span className={styles.noteTime}>
+                                    {formatTime(note.startTime)} → {formatTime(note.endTime)}
+                                  </span>
+                                )}
+                                <span className={styles.noteDate}>{getNoteDateLabel(note)}</span>
+                              </div>
+                            </div>
+                            <button
+                              className={styles.inlineActionButton}
+                              onClick={() => handleStartInlineEdit(note)}
+                              aria-label="Edit note"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className={styles.deleteButton}
+                              onClick={(e) => handleDeleteNote(note.id, e)}
+                              aria-label="Delete note"
+                            >
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M18 6L6 18M6 6l12 12" />
+                              </svg>
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </motion.div>
             )}
 
-            {/* Notes List */}
             {!hasSelectedDate && (
               <div className={styles.notesList}>
                 {displayedNotes.length === 0 ? (
@@ -291,42 +493,44 @@ export const NotesPanel = memo(function NotesPanel({
                   </div>
                 ) : (
                   <AnimatePresence>
-                    {displayedNotes.map((note) => (
-                      <motion.div
-                        key={note.id}
-                        className={styles.noteCard}
-                        initial={{ opacity: 0, y: -8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 8 }}
-                        transition={{ duration: 0.15 }}
-                        layout
-                        onDoubleClick={() => onSelectDate(new Date(note.date))}
-                        title="Double-click to edit"
-                      >
-                        <div className={styles.noteCardContent}>
-                          <p className={styles.noteContent}>{note.content}</p>
-                          <div className={styles.noteCardMeta}>
-                            {note.startTime && note.endTime && (
-                              <span className={styles.noteTime}>
-                                {formatTime(note.startTime)} → {formatTime(note.endTime)}
-                              </span>
-                            )}
-                            <span className={styles.noteDate}>
-                              {format(new Date(note.date), 'EEE MMM d')}
-                            </span>
-                          </div>
-                        </div>
-                        <button
-                          className={styles.deleteButton}
-                          onClick={(e) => handleDeleteNote(note.id, e)}
-                          aria-label="Delete note"
+                    {displayedNotes.map((note) => {
+                      const primaryDate = getPrimaryDateFromNoteKey(note.date);
+
+                      return (
+                        <motion.div
+                          key={note.id}
+                          className={styles.noteCard}
+                          initial={{ opacity: 0, y: -8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 8 }}
+                          transition={{ duration: 0.15 }}
+                          layout
+                          onDoubleClick={() => primaryDate && onSelectDate(primaryDate)}
+                          title="Double-click to edit"
                         >
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M18 6L6 18M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </motion.div>
-                    ))}
+                          <div className={styles.noteCardContent}>
+                            <p className={styles.noteContent}>{note.content}</p>
+                            <div className={styles.noteCardMeta}>
+                              {note.startTime && note.endTime && (
+                                <span className={styles.noteTime}>
+                                  {formatTime(note.startTime)} → {formatTime(note.endTime)}
+                                </span>
+                              )}
+                              <span className={styles.noteDate}>{getNoteDateLabel(note)}</span>
+                            </div>
+                          </div>
+                          <button
+                            className={styles.deleteButton}
+                            onClick={(e) => handleDeleteNote(note.id, e)}
+                            aria-label="Delete note"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M18 6L6 18M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </motion.div>
+                      );
+                    })}
                   </AnimatePresence>
                 )}
               </div>

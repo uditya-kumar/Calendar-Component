@@ -10,7 +10,7 @@ interface BottomSheetProps {
   selectedDate: Date | null;
   note: Note | null;
   onClose: () => void;
-  onSave: (date: Date, content: string, startTime?: string, endTime?: string) => void;
+  onSave: (date: Date, content: string, startTime?: string, endTime?: string, noteId?: string) => void;
   onDelete: (noteId: string) => void;
 }
 
@@ -112,11 +112,11 @@ export const BottomSheet = memo(function BottomSheet({
   const handleSave = useCallback(() => {
     if (selectedDate && content.trim()) {
       setIsClosing(true);
-      onSave(selectedDate, content, startTime, endTime);
+      onSave(selectedDate, content, startTime, endTime, note?.id);
       // Close immediately
       requestAnimationFrame(() => onClose());
     }
-  }, [selectedDate, content, startTime, endTime, onSave, onClose]);
+  }, [selectedDate, content, startTime, endTime, note?.id, onSave, onClose]);
 
   const handleDelete = useCallback(() => {
     if (note) {

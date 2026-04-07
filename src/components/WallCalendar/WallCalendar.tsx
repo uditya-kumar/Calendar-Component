@@ -9,6 +9,7 @@ import { BottomSheet } from '../BottomSheet';
 import { AllNotesModal } from '../AllNotesModal';
 import { useCalendarState } from '../../hooks/useCalendarState';
 import { useNotes } from '../../hooks/useNotes';
+import { getNoteDateKeys } from '../../utils/noteUtils';
 import styles from './WallCalendar.module.css';
 
 interface WallCalendarProps {
@@ -86,7 +87,7 @@ export const WallCalendar = memo(function WallCalendar({
     ? format(selectedRange.start, 'yyyy-MM-dd')
     : null;
   const currentNote = selectedDateKey
-    ? notes.find(n => n.date === selectedDateKey) || null
+    ? notes.find(n => getNoteDateKeys(n.date).includes(selectedDateKey)) || null
     : null;
 
 

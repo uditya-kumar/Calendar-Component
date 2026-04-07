@@ -2,6 +2,11 @@ import { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import type { Note } from '../../types/calendar.types';
+import {
+  getPrimaryDateFromNoteKey,
+  noteIntersectsMonth,
+  parseRangeNoteKey,
+} from '../../utils/noteUtils';
 import styles from './AllNotesModal.module.css';
 
 interface AllNotesModalProps {
@@ -30,15 +35,13 @@ export const AllNotesModal = memo(function AllNotesModal({
   onDeleteNote,
 }: AllNotesModalProps) {
   // Filter notes for current month
-  const monthNotes = notes.filter(n => {
-    if (n.date === 'general') return false;
-    const noteDate = new Date(n.date);
-    return noteDate.getFullYear() === currentMonth.getFullYear() &&
-           noteDate.getMonth() === currentMonth.getMonth();
-  });
+  const monthNotes = notes.filter(n => noteIntersectsMonth(n.date, currentMonth));
 
   const handleNoteClick = (note: Note) => {
-    onSelectNote(new Date(note.date));
+    const primaryDate = getPrimaryDateFromNoteKey(note.date);
+    if (primaryDate) {
+      onSelectNote(primaryDate);
+    }
     onClose();
   };
 
@@ -86,6 +89,11 @@ export const AllNotesModal = memo(function AllNotesModal({
                 </div>
               ) : (
                 monthNotes.map((note) => (
+                  (() => {
+                    const primaryDate = getPrimaryDateFromNoteKey(note.date);
+                    const range = parseRangeNoteKey(note.date);
+
+                    return (
                   <div
                     key={note.id}
                     className={styles.noteCard}
@@ -95,7 +103,11 @@ export const AllNotesModal = memo(function AllNotesModal({
                       <p className={styles.noteTitle}>{note.content}</p>
                       <div className={styles.noteMeta}>
                         <span className={styles.noteDate}>
-                          {format(new Date(note.date), 'EEE, MMM d')}
+                          {range
+                            ? `${format(range.start, 'EEE, MMM d')} - ${format(range.end, 'EEE, MMM d')}`
+                            : primaryDate
+                              ? format(primaryDate, 'EEE, MMM d')
+                              : ''}
                         </span>
                         {note.startTime && note.endTime && (
                           <span className={styles.noteTime}>
@@ -116,6 +128,8 @@ export const AllNotesModal = memo(function AllNotesModal({
                       </svg>
                     </button>
                   </div>
+                    );
+                  })()
                 ))
               )}
             </div>

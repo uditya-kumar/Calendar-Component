@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import type { Note } from '../types/calendar.types';
 import { toDateKey } from '../utils/dateUtils';
+import { createRangeNoteKey, getNoteDateKeys, noteIntersectsMonth } from '../utils/noteUtils';
 
 const STORAGE_KEY = 'calendar-notes';
 
@@ -13,26 +14,35 @@ export function useNotes() {
   const [notes, setNotes] = useLocalStorage<Note[]>(STORAGE_KEY, []);
 
   // Add or update a note for a specific date
-  const saveNote = useCallback((date: Date | 'general', content: string, startTime?: string, endTime?: string) => {
-    const dateKey = date === 'general' ? 'general' : toDateKey(date);
+  const saveNote = useCallback((
+    date: Date | { start: Date; end: Date } | 'general',
+    content: string,
+    startTime?: string,
+    endTime?: string,
+    noteId?: string
+  ) => {
+    const dateKey = date === 'general'
+      ? 'general'
+      : date instanceof Date
+        ? toDateKey(date)
+        : createRangeNoteKey(date.start, date.end);
     const now = new Date().toISOString();
 
     setNotes(prevNotes => {
-      const existingIndex = prevNotes.findIndex(n => n.date === dateKey);
-
       if (content.trim() === '') {
-        // Remove note if content is empty
-        if (existingIndex >= 0) {
-          return prevNotes.filter((_, i) => i !== existingIndex);
-        }
         return prevNotes;
       }
 
-      if (existingIndex >= 0) {
-        // Update existing note
+      if (noteId) {
+        const existingIndex = prevNotes.findIndex(n => n.id === noteId);
+        if (existingIndex === -1) {
+          return prevNotes;
+        }
+
         const updated = [...prevNotes];
         updated[existingIndex] = {
           ...updated[existingIndex],
+          date: dateKey,
           content,
           startTime,
           endTime,
@@ -41,7 +51,7 @@ export function useNotes() {
         return updated;
       }
 
-      // Create new note
+      // Create new note (allows multiple notes per date/range)
       return [...prevNotes, {
         id: generateId(),
         date: dateKey,
@@ -63,7 +73,10 @@ export function useNotes() {
   // Check if a date has a note
   const hasNoteForDate = useCallback((date: Date): boolean => {
     const dateKey = toDateKey(date);
-    return notes.some(n => n.date === dateKey && n.content.trim() !== '');
+    return notes.some(n =>
+      n.content.trim() !== '' &&
+      getNoteDateKeys(n.date).includes(dateKey)
+    );
   }, [notes]);
 
   // Delete a note
@@ -73,14 +86,7 @@ export function useNotes() {
 
   // Get all notes for a specific month
   const getNotesForMonth = useCallback((month: Date): Note[] => {
-    const year = month.getFullYear();
-    const monthNum = month.getMonth();
-
-    return notes.filter(n => {
-      if (n.date === 'general') return false;
-      const noteDate = new Date(n.date);
-      return noteDate.getFullYear() === year && noteDate.getMonth() === monthNum;
-    });
+    return notes.filter(n => noteIntersectsMonth(n.date, month));
   }, [notes]);
 
   // Get general note (month-wide)
@@ -90,11 +96,11 @@ export function useNotes() {
 
   // Get dates that have notes (for showing indicators)
   const datesWithNotes = useMemo(() => {
-    return new Set(
-      notes
-        .filter(n => n.date !== 'general' && n.content.trim() !== '')
-        .map(n => n.date)
-    );
+    const dateKeys = notes
+      .filter(n => n.content.trim() !== '')
+      .flatMap(n => getNoteDateKeys(n.date));
+
+    return new Set(dateKeys);
   }, [notes]);
 
   return {

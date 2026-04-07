@@ -29,7 +29,7 @@ export type CalendarAction =
 
 export interface Note {
   id: string;
-  date: string; // ISO date string (YYYY-MM-DD) or 'general' for month-wide notes
+  date: string; // YYYY-MM-DD, range:YYYY-MM-DD|YYYY-MM-DD, or 'general'
   content: string;
   startTime?: string; // HH:mm format
   endTime?: string; // HH:mm format
