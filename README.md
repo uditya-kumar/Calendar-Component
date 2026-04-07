@@ -75,6 +75,7 @@ function App() {
 | Key | Action |
 |:----|:-------|
 | `Alt + Arrow` | Navigate months |
+| `Ctrl + Click` | Range selection |
 | `Escape` | Clear selection |
 | `Enter` | Select date |
 

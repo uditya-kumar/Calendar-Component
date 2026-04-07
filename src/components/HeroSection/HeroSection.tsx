@@ -6,7 +6,7 @@ import styles from './HeroSection.module.css';
 // Hero images for each month (using placeholder images - replace with actual images)
 const MONTH_IMAGES: Record<number, string> = {
   0: 'https://images.unsplash.com/photo-1418985991508-e47386d96a71?w=800&q=80', // January - Winter
-  1: 'https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=800&q=80', // February - Valentine/Love
+  1: 'https://images.unsplash.com/photo-1775395942058-30ccce5a78d2?w=800&q=80', // February - Valentine/Love
   2: 'https://images.unsplash.com/photo-1544568100-847a948585b9?w=800&q=80', // March - Spring
   3: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=800&q=80', // April - Flowers
   4: 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=800&q=80', // May
