@@ -104,6 +104,18 @@ src/
 └── types/               # TypeScript interfaces
 ```
 
+## Design Choices
+
+| Decision | Reasoning |
+|:---------|:----------|
+| **CSS Modules over Tailwind** | Demonstrates CSS fundamentals; scoped styles without runtime cost |
+| **date-fns over Moment.js** | Tree-shakeable, lightweight, TypeScript-first |
+| **useReducer over Redux** | Sufficient for component-level state; no external dependency needed |
+| **localStorage for notes** | Client-side persistence as per requirements; no backend needed |
+| **Feature folder structure** | Each component self-contained with styles and barrel exports |
+| **Framer Motion** | Enables page-flip animation and micro-interactions with minimal code |
+| **CSS variables for theming** | Dark mode and month themes without runtime JS overhead |
+
 ## License
 
 MIT
