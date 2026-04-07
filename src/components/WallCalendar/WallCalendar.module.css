@@ -79,11 +79,6 @@
 
 /* Responsive - Tablet */
 @media (max-width: 1024px) {
-  .wallCalendar {
-    width: 100%;
-    max-width: 600px;
-  }
-
   .shortcuts {
     flex-wrap: wrap;
     gap: var(--gap-md);
@@ -99,9 +94,11 @@
 
   .content {
     flex-direction: column;
+    width: 100%;
   }
 
   .calendarSection {
+    width: 100%;
     padding: var(--gap-md);
   }
 

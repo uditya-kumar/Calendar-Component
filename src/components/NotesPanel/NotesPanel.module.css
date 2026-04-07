@@ -15,31 +15,22 @@
   min-width: 48px;
 }
 
-/* Toggle button for mobile */
+/* Toggle button for mobile - hidden, using header instead */
 .toggleButton {
   display: none;
-  width: 100%;
-  padding: var(--gap-md);
-  justify-content: center;
-  align-items: center;
-  gap: var(--gap-sm);
-  color: var(--text-secondary);
-  background: transparent;
-  border-bottom: 1px solid var(--border-light);
 }
 
 .toggleIcon {
   transition: transform var(--transition-base);
+  color: var(--text-muted);
 }
 
 .notesLabel {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-size: var(--font-size-base);
+  font-weight: 600;
 }
 
-/* Content */
+/* Content - below header */
 .content {
   flex: 1;
   display: flex;
@@ -64,6 +55,12 @@
   margin: 0;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+
 .noteCount {
   min-width: 20px;
   height: 20px;
@@ -76,6 +73,19 @@
   color: white;
   background: #f04842;
   border-radius: 10px;
+}
+
+.headerToggle {
+  display: none;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.headerToggle svg {
+  transition: transform var(--transition-base);
 }
 
 /* Selected Date Section - Event Style */
@@ -331,22 +341,33 @@
 /* Responsive */
 @media (max-width: 768px) {
   .panel {
-    width: 100%;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: auto;
     min-height: auto;
     border-right: none;
     border-top: 1px solid var(--border-light);
   }
 
-  .toggleButton {
-    display: flex;
+  .collapsed {
+    width: 100% !important;
+    min-width: 100% !important;
+    height: auto;
   }
 
-  .collapsed .content {
-    display: none;
+  .collapsed .header {
+    border-bottom: none;
   }
 
   .header {
     padding: var(--gap-md);
+    cursor: pointer;
+  }
+
+  .headerToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .notesList {

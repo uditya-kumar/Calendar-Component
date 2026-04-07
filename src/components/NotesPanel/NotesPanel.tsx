@@ -147,28 +147,33 @@ export const NotesPanel = memo(function NotesPanel({
       animate={{ width: isCollapsed ? 48 : 'var(--notes-width)' }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
-      {/* Mobile toggle button */}
-      {onToggleCollapse && (
-        <button
-          className={styles.toggleButton}
-          onClick={onToggleCollapse}
-          aria-label={isCollapsed ? 'Expand notes' : 'Collapse notes'}
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className={styles.toggleIcon}
-            style={{ transform: isCollapsed ? 'rotate(180deg)' : 'none' }}
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
-          {isCollapsed && <span className={styles.notesLabel}>Notes</span>}
-        </button>
-      )}
+      {/* Header - always visible, clickable on mobile */}
+      <div
+        className={styles.header}
+        onClick={onToggleCollapse}
+        role={onToggleCollapse ? 'button' : undefined}
+        tabIndex={onToggleCollapse ? 0 : undefined}
+      >
+        <h3 className={styles.title}>Notes</h3>
+        <div className={styles.headerRight}>
+          <span className={styles.noteCount}>{displayedNotes.length}</span>
+          {onToggleCollapse && (
+            <span className={styles.headerToggle}>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                style={{ transform: isCollapsed ? 'rotate(0deg)' : 'rotate(180deg)' }}
+              >
+                <path d="M6 8l6 6 6-6" />
+              </svg>
+            </span>
+          )}
+        </div>
+      </div>
 
       <AnimatePresence>
         {!isCollapsed && (
@@ -179,11 +184,6 @@ export const NotesPanel = memo(function NotesPanel({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            {/* Header */}
-            <div className={styles.header}>
-              <h3 className={styles.title}>Notes</h3>
-              <span className={styles.noteCount}>{displayedNotes.length}</span>
-            </div>
 
             {/* Selected Date Editor - Event Style */}
             {hasSelectedDate && (
