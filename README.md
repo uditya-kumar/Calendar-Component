@@ -14,9 +14,11 @@ A polished React calendar component inspired by physical wall calendars.
 
 ## Screenshot
 
-<img src="https://github.com/user-attachments/assets/03121b70-ce79-40fa-ab44-64a92cbdebb8" alt="Interactive Wall Calendar" width="600">
-
-<img src="https://github.com/user-attachments/assets/251ef032-2248-481b-97d2-c669f897582c" alt="Interactive Wall Calendar Dark Mode" width="600">
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/03121b70-ce79-40fa-ab44-64a92cbdebb8" alt="Interactive Wall Calendar" width="600">
+  <br><br>
+  <img src="https://github.com/user-attachments/assets/251ef032-2248-481b-97d2-c669f897582c" alt="Interactive Wall Calendar Dark Mode" width="600">
+</div>
 
 ## Features
 
