@@ -87,10 +87,17 @@ export const BottomSheet = memo(function BottomSheet({
       setKeyboardOffset(keyboardHeight > 0 ? keyboardHeight : 0);
     };
 
+    // Initial check with delay to catch keyboard opening
+    handleResize();
+    const initialCheck = setTimeout(handleResize, 100);
+    const secondCheck = setTimeout(handleResize, 300);
+
     viewport.addEventListener('resize', handleResize);
     viewport.addEventListener('scroll', handleResize);
 
     return () => {
+      clearTimeout(initialCheck);
+      clearTimeout(secondCheck);
       viewport.removeEventListener('resize', handleResize);
       viewport.removeEventListener('scroll', handleResize);
     };
